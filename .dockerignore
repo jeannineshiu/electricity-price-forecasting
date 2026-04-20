@@ -1,0 +1,16 @@
+.env
+.git
+.venv
+__pycache__
+*.pyc
+*.pyo
+data/
+mlruns/
+mlflow.db
+models/
+*.parquet
+.github/
+infra/
+flows/
+training/
+notebooks/

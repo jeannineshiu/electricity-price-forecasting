@@ -1,0 +1,55 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: elec-forecast-api
+  labels:
+    app: elec-forecast-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: elec-forecast-api
+  template:
+    metadata:
+      labels:
+        app: elec-forecast-api
+    spec:
+      containers:
+        - name: elec-forecast-api
+          image: elec-forecast-api:latest
+          imagePullPolicy: Never        # use local minikube image
+          ports:
+            - containerPort: 8000
+          resources:
+            requests:
+              cpu: "250m"
+              memory: "512Mi"
+            limits:
+              cpu: "500m"
+              memory: "1Gi"
+          volumeMounts:
+            - name: mlflow-db
+              mountPath: /app/mlflow.db
+            - name: mlruns
+              mountPath: /Users/jeannine.shiu/Desktop/electricity-price-forecasting/mlruns
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: 8000
+            initialDelaySeconds: 10
+            periodSeconds: 10
+      volumes:
+        - name: mlflow-db
+          hostPath:
+            path: /mnt/elec-forecast/mlflow.db
+            type: File
+        - name: mlruns
+          hostPath:
+            path: /mnt/elec-forecast/mlruns
+            type: Directory

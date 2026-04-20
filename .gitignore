@@ -1,5 +1,34 @@
+# Environment
 .env
+
+# Data & model artifacts
 data/
+mlruns/
+mlflow.db
+models/
+
+# Python
 __pycache__/
 *.pyc
-mlruns/
+*.pyo
+*.pyd
+.Python
+*.egg-info/
+dist/
+build/
+.eggs/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# macOS
+.DS_Store
+
+# IDE
+.vscode/
+.idea/

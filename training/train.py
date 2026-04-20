@@ -370,7 +370,7 @@ def train_flow():
     print(f"XGBoost  | MAE={xgb_result['mae']:.2f}  RMSE={xgb_result['rmse']:.2f}  MAPE={xgb_result['mape']:.2f}%")
     print(f"LightGBM | MAE={lgbm_result['mae']:.2f}  RMSE={lgbm_result['rmse']:.2f}  MAPE={lgbm_result['mape']:.2f}%")
     print(f"LSTM     | MAE={lstm_result['mae']:.2f}  RMSE={lstm_result['rmse']:.2f}  MAPE={lstm_result['mape']:.2f}%")
-    print(f"\nMLflow run IDs:")
+    print("\nMLflow run IDs:")
     print(f"  XGBoost  : {xgb_result['run_id']}")
     print(f"  LightGBM : {lgbm_result['run_id']}")
     print(f"  LSTM     : {lstm_result['run_id']}")

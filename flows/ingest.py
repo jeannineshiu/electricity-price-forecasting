@@ -89,16 +89,16 @@ def validate(df: pd.DataFrame) -> pd.DataFrame:
         4. Out-of-range prices  → warn  (-500 to 4000 EUR/MWh is the European market range)
     """
     # ── 1. Row count sanity check ──────────────────────────────────────────────
-    # 5 years: 2020 (leap) + 2021 + 2022 + 2023 + 2024 (leap) = 43848 hours
-    expected_min = 43_800
-    expected_max = 43_900
+    n_days = (df["timestamp"].max() - df["timestamp"].min()).days + 1
+    expected_min = int(n_days * 23)
+    expected_max = int(n_days * 25)
     if not (expected_min <= len(df) <= expected_max):
         print(
             f"WARNING: Unexpected row count: {len(df)} "
-            f"(expected {expected_min}–{expected_max})"
+            f"(expected ~{n_days * 24} for {n_days} days)"
         )
     else:
-        print(f"Row count OK: {len(df)}")
+        print(f"Row count OK: {len(df)} ({n_days} days)")
 
     # ── 2. Duplicate timestamps ────────────────────────────────────────────────
     n_dupes = df.duplicated(subset="timestamp").sum()
@@ -134,10 +134,12 @@ def validate(df: pd.DataFrame) -> pd.DataFrame:
 def save_parquet(df: pd.DataFrame) -> Path:
     """
     Save the cleaned DataFrame to Parquet under data/raw/.
-
-    Output filename: de_prices_2020_2024.parquet
+    Filename is derived from the actual date range in the data.
     """
-    path = RAW_DIR / "de_prices_2020_2024.parquet"
+    start_str = df["timestamp"].min().strftime("%Y%m")
+    end_str   = df["timestamp"].max().strftime("%Y%m")
+    filename  = f"de_prices_{start_str}_{end_str}.parquet"
+    path      = RAW_DIR / filename
     df.to_parquet(path, index=False)
 
     print(f"Saved {len(df)} rows → {path}")

@@ -48,6 +48,18 @@ ENTSO-E API / CSV
 
 ---
 
+## Model Performance
+
+| Model | Test MAE | Test RMSE | Test MAPE | Status |
+|---|---|---|---|---|
+| **LightGBM** | **7.23** | **13.75** | **37.79%** | ✅ Production |
+| XGBoost | 7.36 | 14.03 | 39.78% | Archived |
+| LSTM | 10.47 | 16.98 | 68.97% | — |
+
+LightGBM selected for production. LSTM underperforms because lag and rolling features already encode temporal structure — a deliberate engineering decision documented in the experiment tracking.
+
+---
+
 ## Tech Stack
 
 | Layer | Technology |

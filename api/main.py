@@ -2,6 +2,7 @@ import logging
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, HTTPException
+from prometheus_fastapi_instrumentator import Instrumentator
 
 from api.model import FEATURE_COLS, model_store
 from api.schemas import HealthResponse, PredictRequest, PredictResponse
@@ -33,6 +34,8 @@ app = FastAPI(
     version="1.0.0",
     lifespan=lifespan,
 )
+
+Instrumentator().instrument(app).expose(app)
 
 
 # ── Endpoints ─────────────────────────────────────────────────────────────────

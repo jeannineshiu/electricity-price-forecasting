@@ -19,32 +19,7 @@ This project targets the German bidding zone (DE_LU), one of the largest and mos
 
 ## Architecture
 
-```
-ENTSO-E API / CSV
-       │
-       ▼
-┌─────────────┐     ┌──────────────┐     ┌───────────────┐
-│  Prefect    │────▶│  Feature     │────▶│  Training     │
-│  Ingest     │     │  Engineering │     │  (LightGBM /  │
-│  Flow       │     │  Flow        │     │   LSTM)       │
-└─────────────┘     └──────────────┘     └───────┬───────┘
-                                                  │
-                                          MLflow Registry
-                                                  │
-                                                  ▼
-                                        ┌─────────────────┐
-                                        │  FastAPI        │
-                                        │  Serving API    │
-                                        │  /predict       │
-                                        │  /health        │
-                                        │  /metrics       │
-                                        └────────┬────────┘
-                                                 │
-                               ┌─────────────────┼─────────────────┐
-                               ▼                 ▼                 ▼
-                          Kubernetes         Prometheus         Grafana
-                          (minikube)         scrape             Dashboard
-```
+![Architecture](docs/architecture.svg)
 
 ---
 

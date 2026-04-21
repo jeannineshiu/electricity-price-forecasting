@@ -1,0 +1,219 @@
+<svg width="960" height="830" viewBox="0 0 960 830" xmlns="http://www.w3.org/2000/svg" font-family="system-ui, -apple-system, sans-serif">
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#94A3B8"/>
+    </marker>
+    <marker id="arr-purple" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#8B5CF6"/>
+    </marker>
+    <marker id="arr-red" markerWidth="8" markerHeight="6" refX="7" refY="3" orient="auto">
+      <polygon points="0 0, 8 3, 0 6" fill="#F43F5E"/>
+    </marker>
+  </defs>
+
+  <!-- Background -->
+  <rect width="960" height="830" fill="#F8FAFC" rx="12"/>
+
+  <!-- Title -->
+  <text x="480" y="27" text-anchor="middle" font-size="15" font-weight="700" fill="#0F172A">Electricity Price Forecasting — System Architecture</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 1. DATA SOURCES                                 -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="38" width="920" height="88" rx="8" fill="#EFF6FF" stroke="#BFDBFE" stroke-width="1.5"/>
+  <text x="36" y="56" font-size="10" font-weight="700" fill="#1D4ED8" letter-spacing="1">DATA SOURCES</text>
+
+  <!-- ENTSO-E API -->
+  <rect x="90" y="62" width="190" height="52" rx="6" fill="white" stroke="#3B82F6" stroke-width="1.5"/>
+  <text x="185" y="82" text-anchor="middle" font-size="12" font-weight="600" fill="#1E3A8A">ENTSO-E API</text>
+  <text x="185" y="98" text-anchor="middle" font-size="9" fill="#60A5FA">DE_LU Bidding Zone · Day-ahead prices</text>
+
+  <!-- fallback arrow -->
+  <line x1="282" y1="88" x2="318" y2="88" stroke="#94A3B8" stroke-width="1" stroke-dasharray="3,2" marker-end="url(#arr)"/>
+  <text x="300" y="82" text-anchor="middle" font-size="8" fill="#94A3B8">fallback</text>
+
+  <!-- CSV Fallback -->
+  <rect x="320" y="62" width="190" height="52" rx="6" fill="white" stroke="#93C5FD" stroke-width="1.5" stroke-dasharray="5,3"/>
+  <text x="415" y="82" text-anchor="middle" font-size="12" font-weight="600" fill="#1E3A8A">CSV Fallback</text>
+  <text x="415" y="98" text-anchor="middle" font-size="9" fill="#60A5FA">Ember Germany.csv · 2020–2024</text>
+
+  <!-- ── arrow down ── -->
+  <line x1="480" y1="126" x2="480" y2="147" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 2. PREFECT ORCHESTRATION                        -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="150" width="920" height="108" rx="8" fill="#F5F3FF" stroke="#DDD6FE" stroke-width="1.5"/>
+  <text x="36" y="168" font-size="10" font-weight="700" fill="#6D28D9" letter-spacing="1">PREFECT ORCHESTRATION</text>
+
+  <!-- Ingest Flow -->
+  <rect x="55" y="174" width="210" height="72" rx="6" fill="white" stroke="#8B5CF6" stroke-width="1.5"/>
+  <rect x="55" y="174" width="210" height="20" rx="6" fill="#7C3AED"/>
+  <text x="160" y="188" text-anchor="middle" font-size="10" font-weight="700" fill="white">ingest_flow</text>
+  <text x="160" y="207" text-anchor="middle" font-size="9" fill="#5B21B6">fetch_prices()  →  validate()</text>
+  <text x="160" y="220" text-anchor="middle" font-size="9" fill="#5B21B6">save_parquet()</text>
+  <rect x="72" y="228" width="176" height="12" rx="3" fill="#EDE9FE"/>
+  <text x="160" y="238" text-anchor="middle" font-size="8" fill="#6D28D9">data/raw/de_prices_2020_2024.parquet</text>
+
+  <!-- arrow between flows -->
+  <line x1="267" y1="210" x2="325" y2="210" stroke="#8B5CF6" stroke-width="1.5" marker-end="url(#arr-purple)"/>
+
+  <!-- Feature Engineering Flow -->
+  <rect x="328" y="174" width="230" height="72" rx="6" fill="white" stroke="#8B5CF6" stroke-width="1.5"/>
+  <rect x="328" y="174" width="230" height="20" rx="6" fill="#7C3AED"/>
+  <text x="443" y="188" text-anchor="middle" font-size="10" font-weight="700" fill="white">feature_engineering_flow</text>
+  <text x="443" y="207" text-anchor="middle" font-size="9" fill="#5B21B6">lag_1h · lag_24h · lag_168h</text>
+  <text x="443" y="220" text-anchor="middle" font-size="9" fill="#5B21B6">rolling_mean/std · hour · month · is_weekend</text>
+  <rect x="348" y="228" width="190" height="12" rx="3" fill="#EDE9FE"/>
+  <text x="443" y="238" text-anchor="middle" font-size="8" fill="#6D28D9">data/processed/features_2020_2024.parquet</text>
+
+  <!-- ── arrow down ── -->
+  <line x1="480" y1="258" x2="480" y2="278" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 3. ML TRAINING                                  -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="281" width="920" height="138" rx="8" fill="#F0FDF4" stroke="#BBF7D0" stroke-width="1.5"/>
+  <text x="36" y="299" font-size="10" font-weight="700" fill="#15803D" letter-spacing="1">ML TRAINING  ·  Train 2020–2022  /  Val 2023  /  Test 2024</text>
+
+  <!-- XGBoost -->
+  <rect x="45" y="305" width="188" height="100" rx="6" fill="white" stroke="#4ADE80" stroke-width="1.5"/>
+  <text x="139" y="324" text-anchor="middle" font-size="12" font-weight="600" fill="#15803D">XGBoost</text>
+  <text x="139" y="340" text-anchor="middle" font-size="9" fill="#6B7280">Baseline · tabular features</text>
+  <rect x="63" y="346" width="152" height="14" rx="3" fill="#FEF9C3"/>
+  <text x="139" y="357" text-anchor="middle" font-size="9" fill="#854D0E">Optuna HPO · 30 trials</text>
+  <line x1="63" y1="368" x2="215" y2="368" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="139" y="383" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">MAE 7.36 · RMSE 14.03</text>
+  <text x="139" y="397" text-anchor="middle" font-size="9" fill="#9CA3AF">Archived</text>
+
+  <!-- LightGBM (highlighted) -->
+  <rect x="385" y="301" width="190" height="108" rx="6" fill="white" stroke="#16A34A" stroke-width="2.5"/>
+  <rect x="385" y="301" width="190" height="24" rx="6" fill="#16A34A"/>
+  <text x="480" y="317" text-anchor="middle" font-size="11" font-weight="700" fill="white">LightGBM  ✓  Production</text>
+  <text x="480" y="340" text-anchor="middle" font-size="9" fill="#6B7280">tabular features · gradient boosting</text>
+  <rect x="403" y="346" width="154" height="14" rx="3" fill="#FEF9C3"/>
+  <text x="480" y="357" text-anchor="middle" font-size="9" fill="#854D0E">Optuna HPO · 30 trials</text>
+  <line x1="403" y1="368" x2="557" y2="368" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="480" y="383" text-anchor="middle" font-size="10" font-weight="700" fill="#15803D">MAE 7.23 · RMSE 13.75</text>
+  <text x="480" y="397" text-anchor="middle" font-size="9" fill="#16A34A">@production alias · v1</text>
+
+  <!-- LSTM -->
+  <rect x="726" y="305" width="188" height="100" rx="6" fill="white" stroke="#4ADE80" stroke-width="1.5"/>
+  <text x="820" y="324" text-anchor="middle" font-size="12" font-weight="600" fill="#15803D">LSTM</text>
+  <text x="820" y="340" text-anchor="middle" font-size="9" fill="#6B7280">24h lookback · 2-layer · Keras</text>
+  <rect x="744" y="346" width="152" height="14" rx="3" fill="#FEF9C3"/>
+  <text x="820" y="357" text-anchor="middle" font-size="9" fill="#854D0E">Optuna HPO · 15 trials</text>
+  <line x1="744" y1="368" x2="896" y2="368" stroke="#E5E7EB" stroke-width="1"/>
+  <text x="820" y="383" text-anchor="middle" font-size="10" font-weight="600" fill="#374151">MAE 10.47 · RMSE 16.98</text>
+  <text x="820" y="397" text-anchor="middle" font-size="9" fill="#9CA3AF">Underperforms</text>
+
+  <!-- ── arrow down + label ── -->
+  <line x1="480" y1="419" x2="480" y2="441" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="488" y="433" font-size="8" fill="#94A3B8">mlflow.sklearn.log_model()</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 4. MLFLOW REGISTRY                              -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="444" width="920" height="70" rx="8" fill="#FFF7ED" stroke="#FED7AA" stroke-width="1.5"/>
+  <text x="36" y="462" font-size="10" font-weight="700" fill="#C2410C" letter-spacing="1">MLFLOW MODEL REGISTRY</text>
+
+  <rect x="248" y="467" width="464" height="36" rx="6" fill="white" stroke="#F97316" stroke-width="1.5"/>
+  <text x="480" y="483" text-anchor="middle" font-size="12" font-weight="600" fill="#C2410C">lightgbm-electricity-price  @production  v1</text>
+  <text x="480" y="497" text-anchor="middle" font-size="9" fill="#9A3412">sqlite:///mlflow.db  ·  get_model_version_by_alias()  ·  MLflow UI :5000</text>
+
+  <!-- ── arrow down + label ── -->
+  <line x1="480" y1="514" x2="480" y2="536" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="488" y="528" font-size="8" fill="#94A3B8">mlflow.sklearn.load_model() at startup (lifespan)</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 5. FASTAPI SERVING                              -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="539" width="920" height="90" rx="8" fill="#F0F9FF" stroke="#BAE6FD" stroke-width="1.5"/>
+  <text x="36" y="557" font-size="10" font-weight="700" fill="#0E7490" letter-spacing="1">FASTAPI SERVING  ·  Uvicorn  ·  Pydantic v2  ·  ModelStore singleton</text>
+
+  <!-- /predict -->
+  <rect x="108" y="562" width="180" height="56" rx="6" fill="white" stroke="#06B6D4" stroke-width="1.5"/>
+  <rect x="108" y="562" width="180" height="20" rx="6" fill="#0E7490"/>
+  <text x="198" y="576" text-anchor="middle" font-size="10" font-weight="700" fill="white">POST /predict</text>
+  <text x="198" y="594" text-anchor="middle" font-size="9" fill="#0E7490">12 features → EUR/MWh</text>
+  <text x="198" y="609" text-anchor="middle" font-size="9" fill="#64748B">Pydantic validation · ModelStore.predict()</text>
+
+  <!-- /health -->
+  <rect x="390" y="562" width="180" height="56" rx="6" fill="white" stroke="#06B6D4" stroke-width="1.5"/>
+  <rect x="390" y="562" width="180" height="20" rx="6" fill="#0E7490"/>
+  <text x="480" y="576" text-anchor="middle" font-size="10" font-weight="700" fill="white">GET /health</text>
+  <text x="480" y="594" text-anchor="middle" font-size="9" fill="#0E7490">model_name · model_version</text>
+  <text x="480" y="609" text-anchor="middle" font-size="9" fill="#64748B">model_alias: production</text>
+
+  <!-- /metrics -->
+  <rect x="672" y="562" width="180" height="56" rx="6" fill="white" stroke="#06B6D4" stroke-width="1.5"/>
+  <rect x="672" y="562" width="180" height="20" rx="6" fill="#0E7490"/>
+  <text x="762" y="576" text-anchor="middle" font-size="10" font-weight="700" fill="white">GET /metrics</text>
+  <text x="762" y="594" text-anchor="middle" font-size="9" fill="#0E7490">Prometheus exposition format</text>
+  <text x="762" y="609" text-anchor="middle" font-size="9" fill="#64748B">prometheus-fastapi-instrumentator</text>
+
+  <!-- ── arrows down to infra and observability ── -->
+  <line x1="310" y1="629" x2="255" y2="651" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="650" y1="629" x2="705" y2="651" stroke="#94A3B8" stroke-width="1.5" marker-end="url(#arr)"/>
+  <!-- metrics arrow to observability -->
+  <line x1="762" y1="629" x2="762" y2="651" stroke="#F43F5E" stroke-width="1.5" stroke-dasharray="4,2" marker-end="url(#arr-red)"/>
+  <text x="769" y="642" font-size="8" fill="#F43F5E">scrape</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 6a. INFRASTRUCTURE                              -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="654" width="448" height="100" rx="8" fill="#F1F5F9" stroke="#CBD5E1" stroke-width="1.5"/>
+  <text x="36" y="672" font-size="10" font-weight="700" fill="#334155" letter-spacing="1">INFRASTRUCTURE</text>
+
+  <!-- Docker -->
+  <rect x="32" y="678" width="190" height="64" rx="6" fill="white" stroke="#64748B" stroke-width="1.5"/>
+  <text x="127" y="696" text-anchor="middle" font-size="11" font-weight="600" fill="#334155">Docker</text>
+  <text x="127" y="711" text-anchor="middle" font-size="9" fill="#64748B">Multi-stage build · python:3.11-slim</text>
+  <text x="127" y="724" text-anchor="middle" font-size="9" fill="#64748B">libgomp1 · requirements-api.txt</text>
+  <text x="127" y="737" text-anchor="middle" font-size="9" fill="#64748B">ghcr.io/jeannineshiu/...</text>
+
+  <!-- Kubernetes -->
+  <rect x="236" y="678" width="220" height="64" rx="6" fill="white" stroke="#64748B" stroke-width="1.5"/>
+  <text x="346" y="696" text-anchor="middle" font-size="11" font-weight="600" fill="#334155">Kubernetes (minikube)</text>
+  <text x="346" y="711" text-anchor="middle" font-size="9" fill="#64748B">Deployment · NodePort Service</text>
+  <text x="346" y="724" text-anchor="middle" font-size="9" fill="#64748B">HPA: min 2 / max 5 replicas · CPU 70%</text>
+  <text x="346" y="737" text-anchor="middle" font-size="9" fill="#64748B">liveness + readiness probes /health</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 6b. OBSERVABILITY                               -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="492" y="654" width="448" height="100" rx="8" fill="#FFF1F2" stroke="#FECDD3" stroke-width="1.5"/>
+  <text x="508" y="672" font-size="10" font-weight="700" fill="#BE123C" letter-spacing="1">OBSERVABILITY</text>
+
+  <!-- Prometheus -->
+  <rect x="504" y="678" width="190" height="64" rx="6" fill="white" stroke="#F43F5E" stroke-width="1.5"/>
+  <text x="599" y="696" text-anchor="middle" font-size="11" font-weight="600" fill="#BE123C">Prometheus</text>
+  <text x="599" y="711" text-anchor="middle" font-size="9" fill="#F43F5E">scrape_interval: 15s · port 9090</text>
+  <text x="599" y="724" text-anchor="middle" font-size="9" fill="#F43F5E">http_requests_total</text>
+  <text x="599" y="737" text-anchor="middle" font-size="9" fill="#F43F5E">http_request_duration_seconds</text>
+
+  <!-- arrow Prometheus → Grafana -->
+  <line x1="696" y1="710" x2="712" y2="710" stroke="#F43F5E" stroke-width="1.5" marker-end="url(#arr-red)"/>
+
+  <!-- Grafana -->
+  <rect x="714" y="678" width="214" height="64" rx="6" fill="white" stroke="#F43F5E" stroke-width="1.5"/>
+  <text x="821" y="696" text-anchor="middle" font-size="11" font-weight="600" fill="#BE123C">Grafana Dashboard</text>
+  <text x="821" y="711" text-anchor="middle" font-size="9" fill="#F43F5E">port 3000 · PromQL data source</text>
+  <text x="821" y="724" text-anchor="middle" font-size="9" fill="#F43F5E">Requests/sec · Latency P99</text>
+  <text x="821" y="737" text-anchor="middle" font-size="9" fill="#F43F5E">Error rate · Total predict requests</text>
+
+  <!-- ═══════════════════════════════════════════════ -->
+  <!-- 7. CI/CD                                        -->
+  <!-- ═══════════════════════════════════════════════ -->
+  <rect x="20" y="772" width="920" height="40" rx="8" fill="#0F172A"/>
+  <text x="36" y="797" font-size="10" font-weight="700" fill="#94A3B8" letter-spacing="1">CI/CD</text>
+  <text x="94" y="797" font-size="10" fill="#CBD5E1">GitHub Actions:</text>
+  <text x="202" y="797" font-size="10" fill="#38BDF8">push / PR  →</text>
+  <text x="278" y="797" font-size="10" fill="#A3E635">ruff check  →</text>
+  <text x="360" y="797" font-size="10" fill="#A3E635">pytest  →</text>
+  <text x="420" y="797" font-size="10" fill="#FB923C">docker build  →</text>
+  <text x="518" y="797" font-size="10" fill="#FB923C">push ghcr.io  →</text>
+  <text x="610" y="797" font-size="10" fill="#C084FC">kubectl set image  →</text>
+  <text x="730" y="797" font-size="10" fill="#C084FC">rollout status</text>
+  <text x="836" y="797" font-size="9" fill="#475569">(DEPLOY_ENABLED=true)</text>
+</svg>

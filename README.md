@@ -48,6 +48,12 @@ ENTSO-E API / CSV
 
 ---
 
+## Observability Dashboard
+
+![Grafana Dashboard](docs/screenshots/grafana-dashboard.png)
+
+---
+
 ## Model Performance
 
 | Model | Test MAE | Test RMSE | Test MAPE | Status |
